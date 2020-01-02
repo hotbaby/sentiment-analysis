@@ -106,13 +106,16 @@ def encode_sentence(sentences, padding=False, max_length=None, tokenizer=None):
     return encoded_sentences
 
 
-def init_embedding_matrix(word_index, wv):
+def load_embedding_matrix(word_index=None, wv=None):
     """
     Initialize embedding matrix.
     :param word_index: word index dict.
     :param wv: word2vec model.
     :return: embedding matrix.
     """
+    if os.path.exists(config.EMBEDDING_MATRIX_PATH):
+        return np.load(config.EMBEDDING_MATRIX_PATH)
+
     vocab_size = len(word_index)
     embedding_dim = wv.vector_size
 
@@ -122,6 +125,8 @@ def init_embedding_matrix(word_index, wv):
         if word not in wv:
             continue
         embedding_matrix[index] = wv[word]
+
+    np.save(config.EMBEDDING_MATRIX_PATH, embedding_matrix)
 
     return embedding_matrix
 

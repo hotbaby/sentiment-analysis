@@ -21,6 +21,7 @@ TEST_SENTENCE_PATH = os.path.join(DATASET_DIR, 'test_sentence.json')
 TOKENIZER_PATH = os.path.join(DATASET_DIR, 'tokenizer.json')
 
 # word embedding
+EMBEDDING_MATRIX_PATH = os.path.join(DATASET_DIR, 'embedding_matrix.npy')
 W2V_MODEL_PATH = os.path.join(DATASET_DIR, 'w2v.model')
 VOCAB_SIZE = 253154
 EMBEDDING_DIM = 100

@@ -9,7 +9,7 @@ from tensorflow.keras.initializers import Constant
 from senti_analysis import config
 from senti_analysis.preprocess import (load_sentences, load_tokenizer,
                                        encode_sentence, label_transform,
-                                       init_embedding_matrix, load_w2v_model)
+                                       load_embedding_matrix)
 
 
 def get_model(embedding_matrix, name='baseline_model'):
@@ -44,26 +44,25 @@ def train_data():
     x_val = encode_sentence(val_sentences, padding=True, max_length=config.MAX_SEQUENCE_LENGTH,
                             tokenizer=tokenizer)
 
-    y_train = label_transform(train_set['service_waiters_attitude'])
-    y_val = label_transform(val_set['service_waiters_attitude'])
+    y_train = train_set['service_waiters_attitude']
+    y_val = val_set['service_waiters_attitude']
 
-    print('x_train shape {}, y_train shape {}'.format(x_train.shape, y_train.shape))
-    print('x_val shape {}, y_val shape {}'.format(x_val.shape, y_val.shape))
+    y_train, y_val = label_transform(y_train), label_transform(y_val)
 
     return x_train, y_train, x_val, y_val
 
 
-def train(epochs=10):
+def train(epochs=10, learning_rate=0.01):
     # service waiters attitude classification.
     x_train, y_train, x_val, y_val = train_data()
 
-    tokenizer = load_tokenizer()
-    w2v_model = load_w2v_model()
-    embedding_matrix = init_embedding_matrix(tokenizer.word_index, w2v_model)
+    embedding_matrix = load_embedding_matrix()
     model = get_model(embedding_matrix)
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
+                  loss=tf.keras.metrics.CategoricalCrossentropy(),
+                  metrics=['acc'])
 
-    history = model.fit(x_train, y_train, batch_size=32, epochs=epochs, verbose=2,
+    history = model.fit(x_train, y_train, batch_size=32, epochs=epochs, verbose=1,
                         validation_data=(x_val, y_val))
 
     return history
