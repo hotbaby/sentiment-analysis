@@ -1,0 +1,10 @@
+numpy
+pandas
+matplotlib
+scikit-learn
+torch
+wordcloud
+gensim
+jieba
+tensorflow==2.0.0
+keras
