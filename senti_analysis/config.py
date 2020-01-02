@@ -33,3 +33,7 @@ MODEL_PATH = os.path.join(BASE_DIR, 'senti_analysis/models')
 
 # log
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
+
+# train
+WORKER_NUM = 12
+BATCH_SIZE = 128
