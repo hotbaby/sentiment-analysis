@@ -36,7 +36,7 @@ def load_sentences():
     def _load(corpus_file_path, dump_file_path):
         if os.path.exists(dump_file_path):
             # already generated train sentences.
-            with open(dump_file_path) as f:
+            with open(dump_file_path, 'rb') as f:
                 return json.load(f)
 
         data_set = pd.read_csv(corpus_file_path)

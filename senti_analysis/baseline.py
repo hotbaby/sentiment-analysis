@@ -49,7 +49,7 @@ def train_data():
     y_train = train_set['service_waiters_attitude']
     y_val = val_set['service_waiters_attitude']
 
-    y_train, y_val = label_transform(y_train), label_transform(y_val)
+    y_train, y_val = np.array(label_transform(y_train)), np.array(label_transform(y_val))
 
     return x_train, y_train, x_val, y_val
 
@@ -61,7 +61,7 @@ def train(epochs=10, learning_rate=0.01):
     embedding_matrix = load_embedding_matrix()
     model = get_model(embedding_matrix)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
-                  loss=tf.keras.metrics.CategoricalCrossentropy(),
+                  loss='sparse_categorical_crossentropy',
                   metrics=['acc'])
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}'.format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
