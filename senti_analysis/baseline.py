@@ -1,6 +1,7 @@
 # encoding: utf8
 
 import os
+import datetime
 import logging
 import numpy as np
 import pandas as pd
@@ -63,8 +64,12 @@ def train(epochs=10, learning_rate=0.01):
                   loss=tf.keras.metrics.CategoricalCrossentropy(),
                   metrics=['acc'])
 
+    log_dir = os.path.join(config.LOG_DIR, 'fit/{}'.format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
     history = model.fit(x_train, y_train, batch_size=32, epochs=epochs, verbose=1,
-                        validation_data=(x_val, y_val))
+                        validation_data=(x_val, y_val),
+                        callbacks=[tensorboard_callback])
 
     model_path = os.path.join(config.MODEL_PATH, 'baseline.model')
     model.save(model_path)
