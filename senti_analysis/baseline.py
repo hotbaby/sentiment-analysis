@@ -1,5 +1,6 @@
 # encoding: utf8
 
+import os
 import logging
 import numpy as np
 import pandas as pd
@@ -64,5 +65,8 @@ def train(epochs=10, learning_rate=0.01):
 
     history = model.fit(x_train, y_train, batch_size=32, epochs=epochs, verbose=1,
                         validation_data=(x_val, y_val))
+
+    model_path = os.path.join(config.MODEL_PATH, 'baseline.model')
+    model.save(model_path)
 
     return history

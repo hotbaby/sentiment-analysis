@@ -27,3 +27,6 @@ VOCAB_SIZE = 253154
 EMBEDDING_DIM = 100
 
 MAX_SEQUENCE_LENGTH = 1500
+
+# model
+MODEL_PATH = os.path.join(BASE_DIR, 'senti_analysis/models')
