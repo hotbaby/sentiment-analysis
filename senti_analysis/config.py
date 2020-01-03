@@ -29,11 +29,13 @@ EMBEDDING_DIM = 100
 MAX_SEQUENCE_LENGTH = 1500
 
 # model
-MODEL_PATH = os.path.join(BASE_DIR, 'senti_analysis/models')
+MODEL_PATH = os.path.join(BASE_DIR, 'models')
 
 # log
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 
 # train
 WORKER_NUM = 12
-BATCH_SIZE = 128
+BATCH_SIZE = 32
+LEARNING_RATE = 1e-2
+EPOCHS = 3

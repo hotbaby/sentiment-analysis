@@ -54,7 +54,7 @@ def train_data():
     return x_train, y_train, x_val, y_val
 
 
-def train(epochs=10, learning_rate=0.01):
+def train(epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
     # service waiters attitude classification.
     x_train, y_train, x_val, y_val = train_data()
 
