@@ -1,6 +1,7 @@
 # encoding: utf8
 
 import os
+import logging
 import datetime
 import logging
 import numpy as np
@@ -12,6 +13,8 @@ from senti_analysis import config
 from senti_analysis.preprocess import (load_sentences, load_tokenizer,
                                        encode_sentence, label_transform,
                                        load_embedding_matrix)
+
+_logger = logging.getLogger()
 
 
 def get_model(embedding_matrix, name='baseline_model'):
@@ -56,9 +59,19 @@ def train_data():
 
 def train(epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
     # service waiters attitude classification.
+    _logger.info('load data.')
     x_train, y_train, x_val, y_val = train_data()
 
+    train_data_set = tf.data.Dataset.from_tensor_slices((x_train, y_train))
+    train_data_set = train_data_set.batch(config.BATCH_SIZE)
+
+    val_data_set = tf.data.Dataset.from_tensor_slices((x_val, y_val))
+    val_data_set = val_data_set.batch(config.BATCH_SIZE)
+
+    _logger.info('load embedding matrix')
     embedding_matrix = load_embedding_matrix()
+
+    _logger.info('get and compile model')
     model = get_model(embedding_matrix)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                   loss='sparse_categorical_crossentropy',
@@ -66,10 +79,18 @@ def train(epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}'.format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    early_stopping_callback = tf.keras.callbacks.EarlyStopping(patience=2, baseline=0.9)
 
-    history = model.fit(x_train, y_train, batch_size=config.BATCH_SIZE, epochs=epochs, verbose=1,
-                        validation_data=(x_val, y_val),
-                        callbacks=[tensorboard_callback],
+    _logger.info('training model')
+
+    # history = model.fit(x_train, y_train, batch_size=config.BATCH_SIZE, epochs=epochs, verbose=1,
+    #                     validation_data=(x_val, y_val),
+    #                     callbacks=[tensorboard_callback, early_stopping_callback],
+    #                     workers=config.WORKER_NUM)
+
+    history = model.fit(train_data_set, epochs=epochs, verbose=1,
+                        validation_data=val_data_set,
+                        callbacks=[tensorboard_callback, early_stopping_callback],
                         workers=config.WORKER_NUM)
 
     model_path = os.path.join(config.MODEL_PATH, 'baseline.model')
