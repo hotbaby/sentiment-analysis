@@ -71,7 +71,7 @@ def train(epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                   loss='sparse_categorical_crossentropy',
                   metrics=['acc'])
 
-    log_dir = os.path.join(config.LOG_DIR, '{}/fit/{}'.format(model.name,
+    log_dir = os.path.join(config.LOG_DIR, 'fit/{}/{}'.format(model.name,
                                                               datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     checkpoint_path = os.path.join(config.MODEL_CHECKPOINT_PATH, '{}'.format(model.name))
