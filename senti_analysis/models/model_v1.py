@@ -39,11 +39,12 @@ def get_model(embedding_matrix, name='model_v1'):
                                           input_length=config.MAX_SEQUENCE_LENGTH,
                                           trainable=False)(inputs)
     share_hidden = tf.keras.layers.GRU(64, activation='relu', return_sequences=True)(embedding)
-    # share_hidden = tf.keras.layers.GRU(32, activation='relu')(share_hidden)
+    share_hidden = tf.keras.layers.GRU(32, activation='relu')(share_hidden)
 
     outputs = []
     for col in constants.COLS:
-        outputs.append(fc_nn(share_hidden, name=col))
+        # outputs.append(fc_nn(share_hidden, name=col))
+        outputs.append(tf.keras.layers.Dense(4, activation='softmax', name=col)(share_hidden))
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs, name=name)
 
