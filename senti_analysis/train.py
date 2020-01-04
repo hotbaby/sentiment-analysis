@@ -30,7 +30,7 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
     _logger.info('compile model')
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                   loss='sparse_categorical_crossentropy',
-                  metrics=['acc'])
+                  metrics=['acc', 'auc'])
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}/{}'.format(model.name,
                                                               datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
@@ -46,7 +46,7 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                         epochs=epochs,
                         verbose=1,
                         validation_data=({'input': x_val}, y_val),
-                        validation_steps=2,
+                        validation_steps=1,
                         callbacks=[tensorboard_callback, cp_callback],
                         workers=config.WORKER_NUM)
 
