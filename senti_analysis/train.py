@@ -4,6 +4,7 @@ import os
 import uuid
 import logging
 import datetime
+import numpy as np
 import tensorflow as tf
 
 from senti_analysis import config
@@ -30,7 +31,7 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
     _logger.info('compile model')
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                   loss='sparse_categorical_crossentropy',
-                  metrics=[tf.keras.metrics.Accuracy(), tf.keras.metrics.AUC()])
+                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name='acc')])
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}/{}'.format(model.name,
                                                               datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
@@ -46,6 +47,7 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                         epochs=epochs,
                         verbose=1,
                         validation_data=({'input': x_val}, y_val),
+                        steps_per_epoch=np.ceil(x_train.shape[0]/epochs),
                         validation_steps=1,
                         callbacks=[tensorboard_callback, cp_callback],
                         workers=config.WORKER_NUM)
