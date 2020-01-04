@@ -10,7 +10,6 @@ import tensorflow as tf
 from senti_analysis import config
 from senti_analysis.data import x_data, y_data
 from senti_analysis.callbacks import CustomTensorBoard
-from senti_analysis.preprocess import load_embedding_matrix
 
 _logger = logging.getLogger()
 
@@ -29,9 +28,6 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
     y_train, y_val = y_data()
 
     _logger.info('compile model')
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
-                  loss='sparse_categorical_crossentropy',
-                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name='acc')])
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}/{}'.format(model.name,
                                                               datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
@@ -42,14 +38,14 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                                                      verbose=1)
 
     _logger.info('fit model')
-    history = model.fit({'input': x_train}, y_train,
+    history = model.fit(x_train, y_train,
                         batch_size=config.BATCH_SIZE,
                         epochs=epochs,
                         verbose=1,
-                        validation_data=({'input': x_val}, y_val),
-                        steps_per_epoch=np.ceil(x_train.shape[0]/epochs),
-                        validation_steps=1,
+                        validation_data=(x_val, y_val),
                         callbacks=[tensorboard_callback, cp_callback],
+                        steps_per_epoch=len(x_train) // config.BATCH_SIZE,
+                        validation_steps=len(x_val) // config.BATCH_SIZE,
                         workers=config.WORKER_NUM)
 
     _logger.info('save model')

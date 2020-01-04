@@ -10,6 +10,7 @@ from tensorflow.keras.initializers import Constant
 
 from senti_analysis import config
 from senti_analysis import constants
+from senti_analysis.preprocess import load_embedding_matrix
 
 
 def fc_nn(share_hidden, name=None):
@@ -26,12 +27,13 @@ def fc_nn(share_hidden, name=None):
     return outputs
 
 
-def get_model(embedding_matrix, name='model_v1'):
+def get_model(learning_rate=config.LEARNING_RATE, name='model_v1'):
     """
     create model.
     :return: model
     """
     num_class = 4
+    embedding_matrix = load_embedding_matrix()
 
     inputs = tf.keras.layers.Input(shape=(config.MAX_SEQUENCE_LENGTH,), name='input')
     embedding = tf.keras.layers.Embedding(embedding_matrix.shape[0], embedding_matrix.shape[1],
@@ -47,5 +49,9 @@ def get_model(embedding_matrix, name='model_v1'):
         outputs.append(tf.keras.layers.Dense(4, activation='softmax', name=col)(share_hidden))
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs, name=name)
+
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
+                  loss='sparse_categorical_crossentropy',
+                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name='acc')])
 
     return model

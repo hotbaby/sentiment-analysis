@@ -35,6 +35,22 @@ def x_data():
     return x_train, x_val
 
 
+def load_val_data_set():
+    val_set = pd.read_csv(config.VALIDATION_SET_PATH)
+
+    tokenizer = load_tokenizer()
+    train_sentences, val_sentences, test_sentences = load_sentences()
+    x_val = encode_sentence(val_sentences, padding=True, max_length=config.MAX_SEQUENCE_LENGTH,
+                            tokenizer=tokenizer)
+
+    train_set = pd.read_csv(config.TRAIN_SET_PATH)
+    val_set = pd.read_csv(config.VALIDATION_SET_PATH)
+
+    _, y_val = transform_y_data(train_set, val_set, constants.COLS)
+
+    return x_val, y_val
+
+
 def transform_y_data(train_set, val_set, cols):
     y_train = OrderedDict()
     y_val = OrderedDict()
