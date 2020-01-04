@@ -85,8 +85,11 @@ def train(epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                         callbacks=[tensorboard_callback, cp_callback],
                         workers=config.WORKER_NUM)
 
+    _logger.info('save model')
     model_path = os.path.join(config.MODEL_PATH, model.name)
     # model.save(model_path)
     model.save_weights(model_path)
+
+    _logger.info('done')
 
     return history

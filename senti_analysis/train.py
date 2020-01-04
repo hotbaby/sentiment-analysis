@@ -21,10 +21,12 @@ class StoppingCallback(tf.keras.callbacks.Callback):
 
 
 def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
+    _logger.info('load data')
     # service waiters attitude classification.
     x_train, x_val = x_data()
     y_train, y_val = y_data()
 
+    _logger.info('compile model')
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                   loss='sparse_categorical_crossentropy',
                   metrics=['acc'])
@@ -36,6 +38,7 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                                                      save_weights_only=True,
                                                      verbose=1)
 
+    _logger.info('fit model')
     history = model.fit({'input': x_train}, y_train,
                         batch_size=config.BATCH_SIZE,
                         epochs=epochs,
@@ -44,9 +47,11 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
                         callbacks=[tensorboard_callback, cp_callback],
                         workers=config.WORKER_NUM)
 
+    _logger.info('save model')
     model_name = model.name or str(uuid.uuid1())
     model_path = os.path.join(config.MODEL_PATH, model_name)
     # model.save(model_path)
     model.save_weights(model_path)
 
+    _logger.info('done')
     return history
