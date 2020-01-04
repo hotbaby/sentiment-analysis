@@ -73,15 +73,20 @@ def train(epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}'.format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    checkpoint_path = os.path.join(config.MODEL_CHECKPOINT_PATH, '{}'.format(model.name))
+    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
+                                                     save_weights_only=True,
+                                                     verbose=1)
 
     _logger.info('training model')
 
     history = model.fit(x_train, y_train, batch_size=config.BATCH_SIZE, epochs=epochs, verbose=1,
                         validation_data=(x_val, y_val),
-                        callbacks=[tensorboard_callback],
+                        callbacks=[tensorboard_callback, cp_callback],
                         workers=config.WORKER_NUM)
 
-    model_path = os.path.join(config.MODEL_PATH, 'baseline.model')
-    model.save(model_path)
+    model_path = os.path.join(config.MODEL_PATH, model.name)
+    # model.save(model_path)
+    model.save_weights(model_path)
 
     return history

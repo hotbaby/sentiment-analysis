@@ -30,6 +30,7 @@ MAX_SEQUENCE_LENGTH = 1500
 
 # model
 MODEL_PATH = os.path.join(BASE_DIR, 'models')
+MODEL_CHECKPOINT_PATH = os.path.join(BASE_DIR, 'models/checkpoints')
 
 # log
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
