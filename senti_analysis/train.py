@@ -8,7 +8,6 @@ import tensorflow as tf
 
 from senti_analysis import config
 from senti_analysis.data import x_data, y_data
-from senti_analysis.callbacks import CustomTensorBoard
 from senti_analysis.preprocess import load_embedding_matrix
 
 _logger = logging.getLogger()
