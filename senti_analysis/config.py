@@ -24,7 +24,7 @@ TOKENIZER_PATH = os.path.join(DATASET_DIR, 'tokenizer.json')
 EMBEDDING_MATRIX_PATH = os.path.join(DATASET_DIR, 'embedding_matrix.npy')
 W2V_MODEL_PATH = os.path.join(DATASET_DIR, 'w2v.model')
 VOCAB_SIZE = 253154
-EMBEDDING_DIM = 100
+EMBEDDING_DIM = 200
 
 MAX_SEQUENCE_LENGTH = 1500
 
