@@ -5,3 +5,4 @@ venv
 .idea
 logs
 models/checkpoints
+models*

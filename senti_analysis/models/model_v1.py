@@ -40,8 +40,8 @@ def get_model(learning_rate=config.LEARNING_RATE, name='model_v1'):
                                           embeddings_initializer=Constant(embedding_matrix),
                                           input_length=config.MAX_SEQUENCE_LENGTH,
                                           trainable=False)(inputs)
-    share_hidden = tf.keras.layers.GRU(64, activation='relu', return_sequences=True)(embedding)
-    share_hidden = tf.keras.layers.GRU(32, activation='relu')(share_hidden)
+    share_hidden = tf.keras.layers.GRU(64, activation='relu', return_sequences=True, reset_after=True)(embedding)
+    share_hidden = tf.keras.layers.GRU(32, activation='relu', reset_after=True)(share_hidden)
 
     outputs = []
     for col in constants.COLS:

@@ -50,7 +50,7 @@ def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
 
     _logger.info('save model')
     model_name = model.name or str(uuid.uuid1())
-    model_path = os.path.join(config.MODEL_PATH, model_name)
+    model_path = os.path.join(config.MODEL_PATH, '{}.h5'.format(model_name))
     # model.save(model_path)
     model.save_weights(model_path)
 
