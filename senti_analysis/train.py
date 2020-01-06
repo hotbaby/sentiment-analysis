@@ -21,13 +21,11 @@ class StoppingCallback(tf.keras.callbacks.Callback):
             self.model.stop_training = True
 
 
-def train(model, epochs=config.EPOCHS, learning_rate=config.LEARNING_RATE):
+def train(model, epochs=config.EPOCHS):
     _logger.info('load data')
     # service waiters attitude classification.
     x_train, x_val = x_data()
     y_train, y_val = y_data()
-
-    _logger.info('compile model')
 
     log_dir = os.path.join(config.LOG_DIR, 'fit/{}/{}'.format(model.name,
                                                               datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))

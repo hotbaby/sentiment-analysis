@@ -6,6 +6,7 @@ import logging
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import tensorflow_addons as tfa
 from tensorflow.keras.initializers import Constant
 
 from senti_analysis import config
@@ -46,12 +47,13 @@ def get_model(learning_rate=config.LEARNING_RATE, name='model_v1'):
     outputs = []
     for col in constants.COLS:
         # outputs.append(fc_nn(share_hidden, name=col))
-        outputs.append(tf.keras.layers.Dense(4, activation='softmax', name=col)(share_hidden))
+        outputs.append(tf.keras.layers.Dense(num_class, activation='softmax', name=col)(share_hidden))
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs, name=name)
 
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                   loss='sparse_categorical_crossentropy',
-                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name='acc')])
+                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name='acc'),
+                           tfa.metrics.F1Score(num_class, average='micro')],)
 
     return model

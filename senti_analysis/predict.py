@@ -10,7 +10,7 @@ from senti_analysis.models.model_v1 import get_model
 from senti_analysis.preprocess import encode_sentence, text2sentence
 
 
-def predict(text_list:list):
+def predict(model, text_list:list):
     inverse_label_map = {
         0: -2,
         1: -1,
@@ -18,8 +18,8 @@ def predict(text_list:list):
         3: 1
     }
 
-    model = get_model()
-    model.load_weights(os.path.join(config.MODEL_PATH, 'model_v1.h5'))
+    # model = get_model()
+    # model.load_weights(os.path.join(config.MODEL_PATH, 'model_v1.h5'))
 
     sentences = text2sentence(text_list)
     encoded_sentences = encode_sentence(sentences, padding=True, max_length=config.MAX_SEQUENCE_LENGTH)
