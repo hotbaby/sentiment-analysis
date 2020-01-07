@@ -14,14 +14,14 @@ from senti_analysis import constants
 from senti_analysis.preprocess import load_embedding_matrix
 
 
-def fc_nn(share_hidden, name=None):
+def fc_nn(hidden, name=None):
     """
     Fully connected layer.
-    :param share_hidden: share hidden layer
+    :param hidden: share hidden layer
     :param name: output layer name
     :return: outputs
     """
-    hidden = tf.keras.layers.Dense(32, activation='relu')(share_hidden)
+    hidden = tf.keras.layers.Dense(32, activation='relu')(hidden)
     hidden = tf.keras.layers.Dense(16, activation='relu')(hidden)
     outputs = tf.keras.layers.Dense(4, activation='softmax', name=name)(hidden)
 
