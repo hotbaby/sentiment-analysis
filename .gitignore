@@ -5,4 +5,7 @@ venv
 .idea
 logs
 models/checkpoints
-models*
+models/*.zip
+models/*.h5
+models/*.index
+models/*.data*

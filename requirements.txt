@@ -6,5 +6,5 @@ wordcloud
 gensim
 jieba
 tensorflow==2.0.0
-tensorflow_addons
+tensorflow-addons
 keras
