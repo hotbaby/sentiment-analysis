@@ -29,7 +29,7 @@ def fc_nn(hidden, name=None):
     return outputs
 
 
-def get_model(learning_rate=config.LEARNING_RATE, name='model_v3'):
+def get_model(learning_rate=config.LEARNING_RATE, name='model_v4'):
     """
     create model.
     :return: model
