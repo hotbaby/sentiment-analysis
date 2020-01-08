@@ -73,3 +73,19 @@ def y_data():
     y_train, y_val = transform_y_data(train_set, val_set, constants.COLS)
 
     return y_train, y_val
+
+
+def validate_data():
+    val_set = pd.read_csv(config.VALIDATION_SET_PATH)
+
+    tokenizer = load_tokenizer()
+    train_sentences, val_sentences, test_sentences = load_sentences()
+    x_val = encode_sentence(val_sentences, padding=True,
+                            max_length=config.MAX_SEQUENCE_LENGTH, tokenizer=tokenizer)
+
+    y_val = {}
+
+    for col in constants.COLS:
+        y_val[col] = np.array(label_transform(val_set[col]))
+
+    return x_val, y_val
