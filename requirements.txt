@@ -5,6 +5,6 @@ scikit-learn
 wordcloud
 gensim
 jieba
-tensorflow==2.0.0
+tensorflow==2.7.2
 tensorflow-addons
 keras
